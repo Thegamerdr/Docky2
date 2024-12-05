@@ -13,38 +13,33 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Loader2 } from 'lucide-react'
+import { PerfumeComparison } from '@/components/perfume-comparison'
+import { format } from 'date-fns'
 
-type Platform = "google" | "amazon" | "alibaba" | "ebay" | "walmart"
+type Platform = "google" | "amazon" | "alibaba" | "ebay" | "walmart" | "other"
 
 type PerfumeData = {
   id: string
   name: string
   brand: string
-  price: Partial<Record<Platform, number>>
-  stock: Partial<Record<Platform, number>>
-  rating: Partial<Record<Platform, number>>
-  salesVolume: Partial<Record<Platform, number>>
+  price: number
+  stock: number
+  rating: number
+  salesVolume: number
+  platform: Platform
+  lastUpdated: string
 }
 
 type ChartData = {
   name: string
 } & Partial<Record<Platform, number>>
 
-const fetchGoogleShoppingData = async (): Promise<PerfumeData[]> => {
-  const response = await fetch('/api/google-shopping?query=perfume')
+const fetchPerfumeData = async (query: string): Promise<PerfumeData[]> => {
+  const response = await fetch(`/api/google-shopping?query=${encodeURIComponent(query)}`)
   if (!response.ok) {
-    throw new Error('Failed to fetch Google Shopping data')
+    throw new Error('Failed to fetch perfume data')
   }
-  const data = await response.json()
-  return data.items?.map((item: any) => ({
-    id: item.product?.offerId || item.cacheId,
-    name: item.title,
-    brand: item.product?.brand || 'Unknown',
-    price: { google: parseFloat(item.product?.inventories?.[0]?.price?.value) || 0 },
-    stock: { google: item.product?.inventories?.[0]?.availability === 'inStock' ? 1 : 0 },
-    rating: { google: item.product?.aggregateRating?.ratingValue || 0 },
-    salesVolume: { google: item.product?.aggregateRating?.reviewCount || 0 },
-  })) || []
+  return await response.json()
 }
 
 const platformColors: Record<Platform, string> = {
@@ -53,9 +48,10 @@ const platformColors: Record<Platform, string> = {
   alibaba: "#FF6A00",
   ebay: "#86B817",
   walmart: "#0071DC",
+  other: "#808080"
 }
 
-export function Dashboard({ connectedPlatforms = [] }: { connectedPlatforms?: Platform[] }) {
+export function Dashboard({ searchQuery = '' }: { searchQuery?: string }) {
   const [perfumes, setPerfumes] = useState<PerfumeData[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -63,12 +59,8 @@ export function Dashboard({ connectedPlatforms = [] }: { connectedPlatforms?: Pl
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        if (connectedPlatforms.includes('google')) {
-          const googleData = await fetchGoogleShoppingData()
-          setPerfumes(googleData)
-        } else {
-          setPerfumes([])
-        }
+        const data = await fetchPerfumeData(searchQuery || 'perfume')
+        setPerfumes(data)
       } catch (error) {
         console.error('Error fetching perfume data:', error)
         setPerfumes([])
@@ -78,43 +70,49 @@ export function Dashboard({ connectedPlatforms = [] }: { connectedPlatforms?: Pl
     }
 
     fetchData()
-  }, [connectedPlatforms])
+  }, [searchQuery])
 
-  const profitChartData: ChartData[] = perfumes.map(perfume => ({
-    name: perfume.name,
-    ...Object.entries(perfume.price).reduce((acc, [platform, price]) => ({
-      ...acc,
-      [platform]: price - Math.min(...Object.values(perfume.price))
-    }), {})
-  }))
+  const connectedPlatforms = Array.from(new Set(perfumes.map(p => p.platform)))
 
-  const salesVolumeChartData: ChartData[] = perfumes.map(perfume => ({
-    name: perfume.name,
-    ...perfume.salesVolume
-  }))
+  const profitChartData: ChartData[] = perfumes.reduce((acc, perfume) => {
+    const existingEntry = acc.find(entry => entry.name === perfume.name)
+    if (existingEntry) {
+      existingEntry[perfume.platform] = perfume.price
+    } else {
+      acc.push({
+        name: perfume.name,
+        [perfume.platform]: perfume.price
+      })
+    }
+    return acc
+  }, [] as ChartData[])
 
-  const totalListings = perfumes.reduce((sum, perfume) => 
-    sum + Object.values(perfume.stock).reduce((a, b) => a + b, 0), 0
-  )
+  const salesVolumeChartData: ChartData[] = perfumes.reduce((acc, perfume) => {
+    const existingEntry = acc.find(entry => entry.name === perfume.name)
+    if (existingEntry) {
+      existingEntry[perfume.platform] = perfume.salesVolume
+    } else {
+      acc.push({
+        name: perfume.name,
+        [perfume.platform]: perfume.salesVolume
+      })
+    }
+    return acc
+  }, [] as ChartData[])
+
+  const totalListings = perfumes.length
 
   const averagePriceDifference = perfumes.reduce((sum, perfume) => {
-    const prices = Object.values(perfume.price)
-    return sum + (Math.max(...prices) - Math.min(...prices))
+    const otherPrices = perfumes.filter(p => p.name === perfume.name && p.platform !== perfume.platform).map(p => p.price)
+    return sum + (Math.max(perfume.price, ...otherPrices) - Math.min(perfume.price, ...otherPrices))
   }, 0) / (perfumes.length || 1)
 
   const potentialProfit = perfumes.reduce((sum, perfume) => {
-    const prices = Object.values(perfume.price)
-    const maxPrice = Math.max(...prices)
-    const minPrice = Math.min(...prices)
-    const stocks = Object.values(perfume.stock)
-    const totalStock = stocks.reduce((a, b) => a + b, 0)
-    return sum + (maxPrice - minPrice) * totalStock
+    const otherPrices = perfumes.filter(p => p.name === perfume.name && p.platform !== perfume.platform).map(p => p.price)
+    return sum + (Math.max(perfume.price, ...otherPrices) - Math.min(perfume.price, ...otherPrices)) * perfume.stock
   }, 0)
 
-  const averageRating = perfumes.reduce((sum, perfume) => {
-    const ratings = Object.values(perfume.rating)
-    return sum + ratings.reduce((a, b) => a + b, 0) / (ratings.length || 1)
-  }, 0) / (perfumes.length || 1)
+  const averageRating = perfumes.reduce((sum, perfume) => sum + perfume.rating, 0) / (perfumes.length || 1)
 
   if (isLoading) {
     return (
@@ -124,10 +122,10 @@ export function Dashboard({ connectedPlatforms = [] }: { connectedPlatforms?: Pl
     )
   }
 
-  if (connectedPlatforms.length === 0) {
+  if (perfumes.length === 0) {
     return (
       <div className="flex justify-center items-center h-full">
-        <p>Please connect at least one platform to view the dashboard.</p>
+        <p>No perfume data available. Try searching for a specific perfume.</p>
       </div>
     )
   }
@@ -222,32 +220,36 @@ export function Dashboard({ connectedPlatforms = [] }: { connectedPlatforms?: Pl
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Brand</TableHead>
-                {connectedPlatforms.map(platform => (
-                  <TableHead key={platform}>{platform.charAt(0).toUpperCase() + platform.slice(1)}</TableHead>
-                ))}
+                <TableHead>Platform</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Stock</TableHead>
+                <TableHead>Rating</TableHead>
+                <TableHead>Sales Volume</TableHead>
+                <TableHead>Last Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {perfumes.map((perfume) => (
-                <TableRow key={perfume.id}>
+                <TableRow key={`${perfume.id}-${perfume.platform}`}>
                   <TableCell>{perfume.name}</TableCell>
                   <TableCell>{perfume.brand}</TableCell>
-                  {connectedPlatforms.map(platform => (
-                    <TableCell key={platform}>
-                      <Badge variant="secondary">${perfume.price[platform]?.toFixed(2)}</Badge>
-                      <Badge variant="outline" className="ml-2">{perfume.stock[platform]} in stock</Badge>
-                      <div className="mt-1">
-                        <span className="text-sm">Rating: {perfume.rating[platform]?.toFixed(1)}</span>
-                        <span className="text-sm ml-2">Sales: {perfume.salesVolume[platform]}</span>
-                      </div>
-                    </TableCell>
-                  ))}
+                  <TableCell>
+                    <Badge style={{backgroundColor: platformColors[perfume.platform]}}>
+                      {perfume.platform}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>${perfume.price.toFixed(2)}</TableCell>
+                  <TableCell>{perfume.stock}</TableCell>
+                  <TableCell>{perfume.rating.toFixed(1)}</TableCell>
+                  <TableCell>{perfume.salesVolume}</TableCell>
+                  <TableCell>{format(new Date(perfume.lastUpdated), 'PPpp')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+      <PerfumeComparison perfumes={perfumes} platforms={connectedPlatforms as Platform[]} />
     </div>
   )
 }

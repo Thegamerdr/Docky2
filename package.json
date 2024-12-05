@@ -2,6 +2,9 @@
   "name": "perfume-analyzer",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,10 +15,12 @@
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
     "googleapis": "^126.0.1",
     "lucide-react": "^0.279.0",
     "next": "13.5.4",
     "react": "^18",
+    "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "recharts": "^2.8.0",
     "tailwind-merge": "^1.14.0",

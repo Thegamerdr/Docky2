@@ -8,7 +8,7 @@ import { PlatformManager } from "./components/platform-manager"
 import { Toaster } from "@/components/ui/toaster"
 
 export default function Home() {
-  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>(["amazon", "alibaba"])
+  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([])
 
   return (
     <div className="flex h-screen flex-col">
@@ -20,7 +20,7 @@ export default function Home() {
             connectedPlatforms={connectedPlatforms} 
             setConnectedPlatforms={setConnectedPlatforms}
           />
-          <Dashboard connectedPlatforms={connectedPlatforms} />
+          <Dashboard connectedPlatforms={connectedPlatforms as any} />
         </main>
       </div>
       <Toaster />

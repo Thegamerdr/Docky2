@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus, Loader2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -21,65 +21,43 @@ type PlatformManagerProps = {
 }
 
 const initialPlatforms: Platform[] = [
-  { id: "google", name: "Google Shopping", connected: false },
-  { id: "amazon", name: "Amazon", connected: false },
-  { id: "alibaba", name: "Alibaba", connected: false },
-  { id: "ebay", name: "eBay", connected: false },
-  { id: "walmart", name: "Walmart", connected: false },
+  { id: "google", name: "Google Shopping", connected: true },
+  { id: "amazon", name: "Amazon", connected: true },
+  { id: "alibaba", name: "Alibaba", connected: true },
+  { id: "ebay", name: "eBay", connected: true },
+  { id: "walmart", name: "Walmart", connected: true },
 ]
 
 export function PlatformManager({ connectedPlatforms, setConnectedPlatforms }: PlatformManagerProps) {
   const [platforms, setPlatforms] = useState<Platform[]>(initialPlatforms)
-  const [isConnecting, setIsConnecting] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
+  useEffect(() => {
+    setConnectedPlatforms(platforms.filter(p => p.connected).map(p => p.id))
+  }, [platforms, setConnectedPlatforms])
+
   const togglePlatform = async (id: string) => {
-    setIsConnecting(true)
+    setIsLoading(true)
     try {
-      if (id === 'google') {
-        const response = await fetch('/api/google-shopping?query=perfume')
-        if (!response.ok) {
-          throw new Error('Failed to connect to Google Shopping API')
-        }
-        // If successful, update the platform state
-        setPlatforms(prev => 
-          prev.map(p => 
-            p.id === id ? { ...p, connected: !p.connected } : p
-          )
+      setPlatforms(prev => 
+        prev.map(p => 
+          p.id === id ? { ...p, connected: !p.connected } : p
         )
-        setConnectedPlatforms(prev => 
-          
-prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
-        )
-        toast({
-          title: "Platform Connected",
-          description: `Google Shopping has been successfully connected.`,
-        })
-      } else {
-        // For other platforms, we'll keep the mock connection for now
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        setPlatforms(prev => 
-          prev.map(p => 
-            p.id === id ? { ...p, connected: !p.connected } : p
-          )
-        )
-        setConnectedPlatforms(prev => 
-          prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
-        )
-        toast({
-          title: "Platform Updated",
-          description: `${platforms.find(p => p.id === id)?.name} has been ${connectedPlatforms.includes(id) ? 'disconnected' : 'connected'}.`,
-        })
-      }
-    } catch (error) {
-      console.error('Error connecting to platform:', error)
+      )
       toast({
-        title: "Connection Failed",
-        description: `Failed to connect to ${platforms.find(p => p.id === id)?.name}. Please try again.`,
+        title: "Platform Updated",
+        description: `${platforms.find(p => p.id === id)?.name} has been ${platforms.find(p => p.id === id)?.connected ? 'disconnected' : 'connected'}.`,
+      })
+    } catch (error) {
+      console.error('Error toggling platform:', error)
+      toast({
+        title: "Error",
+        description: "An error occurred while updating the platform.",
         variant: "destructive",
       })
     } finally {
-      setIsConnecting(false)
+      setIsLoading(false)
     }
   }
 
@@ -99,25 +77,30 @@ prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
         <CardDescription>Manage your connected platforms</CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[120px] w-full">
-          <div className="flex flex-wrap gap-2">
-            {platforms.map((platform) => (
-              <Badge
-                key={platform.id}
-                variant={platform.connected ? "default" : "outline"}
-                className="flex items-center gap-1 cursor-pointer"
-              >
-                {platform.name}
-                <Switch
-                  checked={platform.connected}
-                  onCheckedChange={() => togglePlatform(platform.id)}
-                  disabled={isConnecting}
-                />
-                {isConnecting && <Loader2 className="h-4 w-4 animate-spin" />}
-              </Badge>
-            ))}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-[120px]">
+            <Loader2 className="h-8 w-8 animate-spin" />
           </div>
-        </ScrollArea>
+        ) : (
+          <ScrollArea className="h-[120px] w-full">
+            <div className="flex flex-wrap gap-2">
+              {platforms.map((platform) => (
+                <Badge
+                  key={platform.id}
+                  variant={platform.connected ? "default" : "outline"}
+                  className="flex items-center gap-1 cursor-pointer"
+                >
+                  {platform.name}
+                  <Switch
+                    checked={platform.connected}
+                    onCheckedChange={() => togglePlatform(platform.id)}
+                    disabled={isLoading || platform.id === 'google'}
+                  />
+                </Badge>
+              ))}
+            </div>
+          </ScrollArea>
+        )}
       </CardContent>
       <CardFooter>
         <Button variant="outline" className="w-full" onClick={addNewPlatform}>
