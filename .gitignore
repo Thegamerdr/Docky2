@@ -1,10 +1,5 @@
 # Dependencies
 /node_modules
-/.pnp
-.pnp.js
-
-# Testing
-/coverage
 
 # Next.js
 /.next/
@@ -12,10 +7,6 @@
 
 # Production
 /build
-
-# Misc
-.DS_Store
-*.pem
 
 # Debug
 npm-debug.log*
@@ -32,32 +23,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# IDE files
+.vscode/
+.idea/
 
-# VS Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# Logs
-logs
-*.log
-
-# OS generated files
+# OS files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+*.temp
 

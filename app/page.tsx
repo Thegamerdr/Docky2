@@ -1,30 +1,28 @@
-"use client"
+import { Suspense } from 'react'
+import { Header } from '@/components/Header'
+import { Hero } from '@/components/Hero'
+import SearchInterface from '@/components/SearchInterface'
+import { ResourceBlockerNotice } from '@/components/ResourceBlockerNotice'
+import Loading from './loading'
+import dynamic from 'next/dynamic'
 
-import { useState } from "react"
-import { Header } from "./components/header"
-import { Sidebar } from "./components/sidebar"
-import { Dashboard } from "./components/dashboard"
-import { PlatformManager } from "./components/platform-manager"
-import { Toaster } from "@/components/ui/toaster"
+const ClientHome = dynamic(() => import('@/components/ClientHome'), { 
+  loading: () => <Loading />,
+  ssr: false 
+})
 
 export default function Home() {
-  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([])
-
   return (
-    <div className="flex h-screen flex-col">
-      <Header />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar connectedPlatforms={connectedPlatforms} />
-        <main className="flex-1 overflow-y-auto bg-gray-100 p-4">
-          <PlatformManager 
-            connectedPlatforms={connectedPlatforms} 
-            setConnectedPlatforms={setConnectedPlatforms}
-          />
-          <Dashboard connectedPlatforms={connectedPlatforms as any} />
-        </main>
-      </div>
-      <Toaster />
-    </div>
+    <Suspense fallback={<Loading />}>
+      <ClientHome>
+        <div className="min-h-screen bg-background">
+          <ResourceBlockerNotice />
+          <Header />
+          <Hero />
+          <SearchInterface />
+        </div>
+      </ClientHome>
+    </Suspense>
   )
 }
 

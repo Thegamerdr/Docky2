@@ -2,7 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // Add any other necessary configurations here
+  images: {
+    domains: ['localhost', 'your-production-domain.com'],
+  },
+  experimental: {
+    appDir: true,
+    serverActions: true,
+  },
 }
 
 module.exports = nextConfig

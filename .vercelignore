@@ -1,0 +1,30 @@
+# Source code (not needed in production)
+/src
+
+# Test files
+/__tests__
+/test
+/tests
+*.test.js
+*.spec.js
+
+# Configuration files (not needed in production)
+.eslintrc
+.prettierrc
+tsconfig.json
+
+# Documentation
+/docs
+README.md
+CHANGELOG.md
+
+# Development tools
+/tools
+/scripts
+
+# Miscellaneous
+*.log
+.git
+.gitignore
+.env.example
+

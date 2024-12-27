@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Perfume {
+  id            String         @id @default(cuid())
+  name          String
+  brand         String
+  price         Float
+  rating        Float
+  image         String
+  notes         String[]
+  description   String
+  concentration String?        // EDT, EDP, etc.
+  season        String?
+  dupes        PerfumeDupe[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model PerfumeDupe {
+  id              String   @id @default(cuid())
+  originalPerfume Perfume  @relation(fields: [perfumeId], references: [id])
+  perfumeId       String
+  dupeBrand       String
+  dupeName        String
+  concentration   String?
+  price          Float?
+  rating         Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([perfumeId])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+

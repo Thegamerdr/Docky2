@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "name": "Chanel No. 5",
+    "brand": "Chanel",
+    "price": 99.99,
+    "rating": 4.8,
+    "image": "/placeholder.svg",
+    "notes": ["aldehydes", "jasmine", "rose"],
+    "description": "An iconic fragrance that has endured for decades."
+  },
+  {
+    "id": "2",
+    "name": "Dior Sauvage",
+    "brand": "Dior",
+    "price": 89.99,
+    "rating": 4.7,
+    "image": "/placeholder.svg",
+    "notes": ["bergamot", "pepper", "ambroxan"],
+    "description": "A fresh and bold scent for the modern man."
+  }
+]
+
