@@ -1,17 +1,23 @@
-import Image from 'next/image'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export function PerfumeCard({ perfume }) {
+interface Perfume {
+  id: string
+  name: string
+  brand: string
+  price: number
+}
+
+export function PerfumeCard({ perfume }: { perfume: Perfume }) {
   return (
-    <div className="card">
-      <Image
-        src={perfume.image}
-        alt={perfume.name}
-        width={300}
-        height={300}
-        loading="lazy"
-      />
-      {/* Rest of the card content */}
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{perfume.name}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p>Brand: {perfume.brand}</p>
+        <p>Price: ${perfume.price}</p>
+      </CardContent>
+    </Card>
   )
 }
 
