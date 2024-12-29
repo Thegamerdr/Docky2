@@ -76,11 +76,11 @@ export async function GET(request: Request) {
 
     return NextResponse.json(paginatedPerfumes)
   } catch (error) {
-    logger.error('Error fetching perfumes:', error)
+    logger.error('Error fetching perfumes:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch perfumes' },
+      { error: error instanceof Error ? error.message : 'An unknown error occurred while fetching perfumes' },
       { status: 500 }
-    )
+    );
   }
 }
 

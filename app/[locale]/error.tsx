@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { logger } from '@/utils/logger'
 
 export default function Error({
   error,
@@ -16,7 +17,7 @@ export default function Error({
   const t = useTranslations('error')
 
   useEffect(() => {
-    console.error('Application error:', error)
+    logger.error('Application error:', error)
   }, [error])
 
   return (
@@ -25,7 +26,7 @@ export default function Error({
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>{t('errorOccurred')}</AlertTitle>
         <AlertDescription>
-          <p className="mb-4">{t('tryAgainMessage')}</p>
+          <p className="mb-4">{error.message || t('tryAgainMessage')}</p>
           <Button onClick={reset} variant="secondary">
             {t('tryAgain')}
           </Button>

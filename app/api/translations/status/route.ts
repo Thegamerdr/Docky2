@@ -31,11 +31,11 @@ export async function GET() {
 
     return NextResponse.json(formattedProgress)
   } catch (error) {
-    console.error('Error fetching translation status:', error)
+    console.error('Error fetching translation status:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch translation status' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch translation status' },
       { status: 500 }
-    )
+    );
   }
 }
 

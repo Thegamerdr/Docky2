@@ -25,12 +25,11 @@ module.exports = {
     // Enforce usage of type-safe translations
     '@typescript-eslint/no-unsafe-argument': 'error',
     '@typescript-eslint/no-unsafe-member-access': 'error',
-    // Add any custom rules here
   },
   settings: {
     react: {
       version: 'detect',
     },
   },
-};
+}
 

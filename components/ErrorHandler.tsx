@@ -23,13 +23,16 @@ export function ErrorHandler({ error, reset }: ErrorHandlerProps) {
 
   const getErrorDetails = () => {
     if (!error) return "An unknown error occurred."
-    if (error.message.includes("Cannot destructure property 'data' of '(0 , a.useSession)(...)'")) {
-      return "There was an issue with the user session. Please try logging out and logging back in."
+    if (error instanceof Error) {
+      if (error.message.includes("Cannot destructure property 'data' of '(0 , a.useSession)(...)'")) {
+        return "There was an issue with the user session. Please try logging out and logging back in."
+      }
+      if (error.message.includes("Cannot read properties of undefined (reading 'message')")) {
+        return "An unexpected error occurred. Our team has been notified and is working on a solution."
+      }
+      return error.message
     }
-    if (error.message.includes("Cannot read properties of undefined (reading 'message')")) {
-      return "An unexpected error occurred. Our team has been notified and is working on a solution."
-    }
-    return error.message
+    return "An unexpected error occurred."
   }
 
   if (!error) return null
@@ -39,8 +42,7 @@ export function ErrorHandler({ error, reset }: ErrorHandlerProps) {
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>Error Occurred</AlertTitle>
       <AlertDescription>
-        <p>{error.message || "An unknown error occurred."}</p>
-        <p className="mt-2">{getErrorDetails()}</p>
+        <p>{getErrorDetails()}</p>
         <div className="mt-4">
           <Button onClick={handleReset} variant="secondary" className="mr-2">
             Try Again
@@ -54,7 +56,7 @@ export function ErrorHandler({ error, reset }: ErrorHandlerProps) {
             {showDetails ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
           </Button>
         </div>
-        {showDetails && error.stack && (
+        {showDetails && error instanceof Error && error.stack && (
           <pre className="mt-4 p-4 bg-muted text-muted-foreground rounded-md overflow-auto">
             {error.stack}
           </pre>

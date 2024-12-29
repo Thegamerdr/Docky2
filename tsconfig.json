@@ -17,7 +17,7 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "types": ["@mdx-js/loader"]
+    "types": ["node", "@mdx-js/loader"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
