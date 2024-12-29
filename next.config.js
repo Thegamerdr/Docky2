@@ -4,7 +4,7 @@ const withMDX = require('@next/mdx')({
     remarkPlugins: [],
     rehypePlugins: [],
   },
-});
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -38,11 +38,11 @@ const nextConfig = {
     config.module.rules.push({
       test: /\.(woff|woff2|eot|ttf|otf)$/i,
       type: 'asset/resource',
-    });
+    })
 
-    return config;
+    return config
   },
-};
+}
 
-module.exports = withMDX(nextConfig);
+module.exports = withMDX(nextConfig)
 
