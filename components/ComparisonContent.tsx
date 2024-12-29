@@ -4,12 +4,13 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { SideBySideComparison } from '@/components/SideBySideComparison'
-import { getPerfumes } from '@/services/perfume' // Updated import
+import { getPerfumes } from '@/services/perfume' // Updated import path
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useToast } from '@/components/ui/use-toast'
+import { PerfumeData } from '@/types/perfume'
 
 export function ComparisonContent() {
-  const [perfumes, setPerfumes] = useState<any[]>([])
+  const [perfumes, setPerfumes] = useState<PerfumeData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const searchParams = useSearchParams()
   const t = useTranslations('compare')
