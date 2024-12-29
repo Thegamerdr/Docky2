@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { SideBySideComparison } from '@/components/SideBySideComparison'
-import { getPerfumes } from '@/lib/api'
+import { getPerfumes } from '@/services/perfume' // Updated import
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useToast } from '@/components/ui/use-toast'
 

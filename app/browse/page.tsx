@@ -1,15 +1,13 @@
+import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { Layout } from '@/components/Layout'
 import { AdvancedSearch } from '@/components/AdvancedSearch'
 import { PerfumeList } from '@/components/PerfumeList'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
 export const metadata: Metadata = {
   title: 'Browse Perfumes',
   description: 'Explore our extensive collection of perfumes. Use our advanced search to find your perfect scent.',
-  openGraph: {
-    title: 'Browse Perfumes | PerfumeVS',
-    description: 'Explore our extensive collection of perfumes. Use our advanced search to find your perfect scent.',
-  },
 }
 
 export default function BrowsePage() {
@@ -21,11 +19,15 @@ export default function BrowsePage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-1 bg-white p-4 rounded-lg shadow">
             <h2 className="text-xl font-semibold mb-4 text-teal-700">Advanced Search</h2>
-            <AdvancedSearch />
+            <Suspense fallback={<LoadingSpinner />}>
+              <AdvancedSearch />
+            </Suspense>
           </div>
           
           <div className="md:col-span-3">
-            <PerfumeList />
+            <Suspense fallback={<LoadingSpinner />}>
+              <PerfumeList />
+            </Suspense>
           </div>
         </div>
       </div>
