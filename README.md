@@ -22,11 +22,14 @@ This application allows users to compare and analyze perfumes, including their d
 3. Build the application: `npm run build`
 4. Start the production server: `npm start`
 
-## Contributing
+## Backup Strategy
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+We have implemented a backup strategy to ensure data safety:
 
-## License
+1. A TypeScript script (`scripts/backup-database.ts`) creates a JSON backup of our mock data and user-generated content.
+2. A shell script (`scripts/backup-database.sh`) creates a SQL dump of the production database.
+3. The shell script is set up as a daily cron job on the production server.
+4. We keep the last 7 days of backups to manage disk space.
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+To manually create a backup, run:
 

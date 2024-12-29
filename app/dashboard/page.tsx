@@ -1,17 +1,21 @@
-import dynamic from 'next/dynamic'
-import Loading from './loading'
-import { ErrorHandler } from '@/components/ErrorHandler'
+import { Suspense } from 'react'
+import { Metadata } from 'next'
+import { Layout } from '@/components/Layout'
+import DashboardClient from '@/components/DashboardClient'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
-const DashboardClient = dynamic(() => import('@/components/DashboardClient'), {
-  loading: () => <Loading />,
-  ssr: false
-})
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  description: 'Manage your perfume collection and preferences',
+}
 
-export default function Dashboard() {
+export default function DashboardPage() {
   return (
-    <ErrorHandler error={null}>
-      <DashboardClient />
-    </ErrorHandler>
+    <Layout>
+      <Suspense fallback={<LoadingSpinner />}>
+        <DashboardClient />
+      </Suspense>
+    </Layout>
   )
 }
 

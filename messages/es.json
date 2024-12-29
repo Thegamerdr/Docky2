@@ -1,0 +1,19 @@
+{
+  "home": {
+    "title": "Encuentra tu Fragancia Perfecta",
+    "subtitle": "Compara perfumes y descubre tu aroma distintivo",
+    "searchPlaceholder": "Busca perfumes (ej. 'Chanel No. 5' o 'aromas florales')",
+    "compareButton": "Comparar"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "compare": "Comparar"
+  },
+  "perfume": {
+    "notes": "Notas",
+    "longevity": "Duración",
+    "sillage": "Estela",
+    "userReviews": "Reseñas de Usuarios"
+  }
+}
+

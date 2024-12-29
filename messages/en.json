@@ -1,0 +1,19 @@
+{
+  "home": {
+    "title": "Find Your Perfect Scent Match",
+    "subtitle": "Compare perfumes and discover your signature fragrance",
+    "searchPlaceholder": "Search perfumes (e.g., 'Chanel No. 5' or 'floral scents')",
+    "compareButton": "Compare"
+  },
+  "navigation": {
+    "home": "Home",
+    "compare": "Compare"
+  },
+  "perfume": {
+    "notes": "Notes",
+    "longevity": "Longevity",
+    "sillage": "Sillage",
+    "userReviews": "User Reviews"
+  }
+}
+

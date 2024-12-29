@@ -65,7 +65,12 @@ export function Header() {
               <Link href="/about" className="hover:text-primary transition-colors">
                 About
               </Link>
-              <AuthStatus />
+              <div className="flex items-center space-x-4">
+                <Link href="/browse" className="text-sm font-medium">
+                  Browse as Guest
+                </Link>
+                <AuthStatus />
+              </div>
               <Button
                 variant="ghost"
                 size="icon"

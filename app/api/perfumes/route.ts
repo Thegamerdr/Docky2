@@ -1,60 +1,84 @@
 import { NextResponse } from 'next/server'
-import { PerfumeData } from '@/types/perfume'
+import { mockPerfumes } from '@/lib/mockData'
+import { logger } from '@/utils/logger'
 
-// Mock data (replace with your actual data source)
-const perfumes: PerfumeData[] = [
-  {
-    id: 1,
-    name: 'Chanel No. 5',
-    brand: 'Chanel',
-    price: 99.99,
-    rating: 4.8,
-    image: '/placeholder.svg'
-  },
-  {
-    id: 2,
-    name: 'Dior Sauvage',
-    brand: 'Dior',
-    price: 89.99,
-    rating: 4.7,
-    image: '/placeholder.svg'
-  },
-  {
-    id: 3,
-    name: 'Black Opium',
-    brand: 'Yves Saint Laurent',
-    price: 79.99,
-    rating: 4.9,
-    image: '/placeholder.svg'
-  },
-  {
-    id: 4,
-    name: 'Acqua di Gio',
-    brand: 'Giorgio Armani',
-    price: 69.99,
-    rating: 4.6,
-    image: '/placeholder.svg'
-  },
-  {
-    id: 5,
-    name: 'Black Orchid',
-    brand: 'Tom Ford',
-    price: 129.99,
-    rating: 4.8,
-    image: '/placeholder.svg'
+// Simple in-memory cache
+const cache = new Map()
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const query = searchParams.get('query')?.toLowerCase()
+  const ids = searchParams.getAll('id')
+  const brand = searchParams.get('brand')
+  const minPrice = searchParams.get('minPrice')
+  const maxPrice = searchParams.get('maxPrice')
+  const notes = searchParams.getAll('notes')
+  const page = parseInt(searchParams.get('page') || '1')
+  const limit = parseInt(searchParams.get('limit') || '12')
+
+  // Create a cache key based on the request parameters
+  const cacheKey = `${query}-${ids.join(',')}-${brand}-${minPrice}-${maxPrice}-${notes.join(',')}-${page}-${limit}`
+
+  // Check if we have a cached response
+  if (cache.has(cacheKey)) {
+    logger.info('Serving from cache', { cacheKey })
+    return NextResponse.json(cache.get(cacheKey))
   }
-]
 
-export async function GET() {
   try {
-    // Implement caching headers
-    const response = NextResponse.json(perfumes)
-    response.headers.set('Cache-Control', 's-maxage=3600, stale-while-revalidate')
-    return response
+    let filteredPerfumes = [...mockPerfumes]
+
+    if (ids.length > 0) {
+      filteredPerfumes = filteredPerfumes.filter(perfume => ids.includes(perfume.id))
+    } else {
+      if (query) {
+        filteredPerfumes = filteredPerfumes.filter(perfume => 
+          perfume.name.toLowerCase().includes(query) || 
+          perfume.brand.toLowerCase().includes(query) ||
+          perfume.notes?.some(note => note.toLowerCase().includes(query))
+        )
+      }
+
+      if (brand && brand !== 'All') {
+        filteredPerfumes = filteredPerfumes.filter(perfume => 
+          perfume.brand.toLowerCase() === brand.toLowerCase()
+        )
+      }
+
+      if (minPrice) {
+        filteredPerfumes = filteredPerfumes.filter(perfume => 
+          perfume.price && perfume.price >= Number(minPrice)
+        )
+      }
+
+      if (maxPrice) {
+        filteredPerfumes = filteredPerfumes.filter(perfume => 
+          perfume.price && perfume.price <= Number(maxPrice)
+        )
+      }
+
+      if (notes.length > 0) {
+        filteredPerfumes = filteredPerfumes.filter(perfume => 
+          perfume.notes?.some(note => notes.includes(note.toLowerCase()))
+        )
+      }
+    }
+
+    // Pagination
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+    const paginatedPerfumes = filteredPerfumes.slice(startIndex, endIndex)
+
+    logger.info(`Fetched ${paginatedPerfumes.length} perfumes`, { query, brand, minPrice, maxPrice, notes, page, limit })
+
+    // Cache the response
+    cache.set(cacheKey, paginatedPerfumes)
+
+    return NextResponse.json(paginatedPerfumes)
   } catch (error) {
-    console.error('API Error:', error)
+    logger.error('Error fetching perfumes:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to fetch perfumes' },
       { status: 500 }
     )
   }

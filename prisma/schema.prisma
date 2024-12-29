@@ -7,49 +7,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reviews       Review[]
+  comparisons   Comparison[]
+}
+
 model Perfume {
-  id            String         @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String
   brand         String
+  concentration String
   price         Float
-  rating        Float
-  image         String
-  notes         String[]
-  description   String
-  concentration String?        // EDT, EDP, etc.
-  season        String?
-  dupes        PerfumeDupe[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  sillage       Int      // 1-10 rating
+  longevity     Int      // hours
+  value         Int      // 1-10 rating
+  rating        Float    // Average user rating
+  notes         String[] // Array of fragrance notes
+  seasons       String[] // Array of suitable seasons
+  imageUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reviews       Review[]
+  comparisons   ComparisonPerfume[]
 }
 
-model PerfumeDupe {
-  id              String   @id @default(cuid())
-  originalPerfume Perfume  @relation(fields: [perfumeId], references: [id])
-  perfumeId       String
-  dupeBrand       String
-  dupeName        String
-  concentration   String?
-  price          Float?
-  rating         Float?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@index([perfumeId])
-}
-
-model User {
+model Review {
   id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  password  String
-  role      Role     @default(USER)
+  rating    Float
+  comment   String?
+  userId    String
+  perfumeId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
 }
 
-enum Role {
-  USER
-  ADMIN
+model Comparison {
+  id        String              @id @default(cuid())
+  userId    String
+  createdAt DateTime           @default(now())
+  user      User               @relation(fields: [userId], references: [id])
+  perfumes  ComparisonPerfume[]
+}
+
+model ComparisonPerfume {
+  id           String     @id @default(cuid())
+  comparisonId String
+  perfumeId    String
+  comparison   Comparison @relation(fields: [comparisonId], references: [id])
+  perfume      Perfume    @relation(fields: [perfumeId], references: [id])
 }
 
