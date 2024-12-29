@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { Inter } from 'next/font/google'
 import { IntlSupportWarning } from '@/components/IntlSupportWarning'
-import { IntlPolyfills } from '@/components/IntlPolyfills' // Added import
+import { IntlPolyfills } from '@/lib/intlPolyfills' // Updated import
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -41,7 +41,7 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: browserCheck }} />
       </head>
       <body>
-        <IntlPolyfills />
+        <IntlPolyfills /> {/*Ensured IntlPolyfills is used*/}
         <NextIntlClientProvider locale={locale} messages={messages}>
           <IntlSupportWarning />
           {children}

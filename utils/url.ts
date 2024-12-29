@@ -1,32 +1,30 @@
-const IDN_REGEX = /[^\u0000-\u007E]/
-
-export function processUrl(url: string): string {
+function toASCII(input: string): string {
   try {
-    const parsedUrl = new URL(url)
-    // Handle internationalized domain names
-    if (IDN_REGEX.test(parsedUrl.hostname)) {
-      return parsedUrl.href
-    }
-    return url
+    const url = new URL(`http://${input}`);
+    return url.hostname;
   } catch (error) {
-    console.error('Error processing URL:', error)
-    return url
+    console.error('Invalid domain:', error);
+    return input;
   }
 }
 
-export function normalizeUrl(url: string): string {
-  if (!url) return ''
-  
-  try {
-    // Ensure URL has protocol
-    const hasProtocol = /^[a-zA-Z]+:\/\//.test(url)
-    const urlWithProtocol = hasProtocol ? url : `https://${url}`
-    
-    const normalized = new URL(urlWithProtocol)
-    return normalized.toString()
-  } catch (error) {
-    console.error('Error normalizing URL:', error)
-    return url
-  }
+// Example usage:
+const domain1 = toASCII("example.com");
+console.log(domain1); // Output: example.com
+
+const domain2 = toASCII("пример.рф");
+console.log(domain2); // Output: xn--e1afmkfd.xn--p1ai
+
+const domain3 = toASCII("Invalid Domain");
+console.log(domain3); // Output: Invalid Domain (and error message in console)
+
+
+//Further example demonstrating usage within a function
+function processDomain(input: string): string {
+  const asciiDomain = toASCII(input);
+  return `Processed domain: ${asciiDomain}`;
 }
+
+const result = processDomain("another-example.co.uk");
+console.log(result); // Output: Processed domain: another-example.co.uk
 
