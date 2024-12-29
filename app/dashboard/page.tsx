@@ -1,12 +1,21 @@
 import { Suspense } from 'react'
+import { Metadata } from 'next'
+import { Layout } from '@/components/Layout'
+import DashboardClient from '@/components/DashboardClient'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { DashboardContent } from '@/components/DashboardContent'
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  description: 'Manage your perfume collection and preferences',
+}
 
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <DashboardContent />
-    </Suspense>
+    <Layout>
+      <Suspense fallback={<LoadingSpinner />}>
+        <DashboardClient />
+      </Suspense>
+    </Layout>
   )
 }
 

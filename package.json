@@ -16,6 +16,11 @@
     "msw-storybook-addon": "^1.0.0",
     "storybook": "^7.0.0",
     "storybook-addon-next-router": "^4.0.0"
+  },
+  "dependencies": {
+    "@mdx-js/loader": "^2.3.0",
+    "@mdx-js/react": "^2.3.0",
+    "@next/mdx": "^13.4.19"
   }
 }
 

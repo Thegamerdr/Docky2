@@ -1,28 +1,15 @@
 {
-  "demo": {
-    "title": "Internationalization Features",
-    "pluralization": {
-      "title": "Pluralization",
-      "items": {
-        "zero": "No items",
-        "one": "One item",
-        "other": "{count} items"
-      }
-    },
-    "dateTime": {
-      "title": "Date & Time Formatting"
-    },
-    "numbers": {
-      "title": "Number Formatting"
-    },
-    "lists": {
-      "title": "List Formatting"
-    },
-    "direction": {
-      "title": "Text Direction",
-      "start": "This text aligns to the start",
-      "end": "This text aligns to the end"
-    }
+  "navigation": {
+    "mainNavigation": "Main navigation",
+    "home": "Home",
+    "browse": "Browse",
+    "compare": "Compare",
+    "wishlist": "Wishlist"
+  },
+  "search": {
+    "searchPlaceholder": "Search perfumes...",
+    "searchLabel": "Search for perfumes",
+    "searchButton": "Search"
   }
 }
 
