@@ -1,8 +1,8 @@
 import { NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { Inter } from 'next/font/google'
+import { IntlPolyfills } from '@/components/IntlPolyfills'
 import { IntlSupportWarning } from '@/components/IntlSupportWarning'
-import { IntlPolyfills } from '@/components/IntlPolyfills' // Added import
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,22 +24,8 @@ export default async function LocaleLayout({
     notFound()
   }
 
-  const browserCheck = `
-    if (typeof window !== 'undefined') {
-      // Check if the browser supports Intl
-      if (!window.Intl || !window.Intl.DateTimeFormat) {
-        // If not, display a warning message
-        console.warn('Browser does not support Intl. Please update your browser.');
-      }
-    }
-  `;
-
-
   return (
     <html lang={locale} className={inter.className}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: browserCheck }} />
-      </head>
       <body>
         <IntlPolyfills />
         <NextIntlClientProvider locale={locale} messages={messages}>

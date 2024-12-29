@@ -1,3 +1,11 @@
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Enable internationalized routing
@@ -31,9 +39,25 @@ const nextConfig = {
       type: 'asset/resource',
     })
 
+    // Add MDX loader
+    config.module.rules.push({
+      test: /\.mdx?$/,
+      use: [
+        {
+          loader: '@mdx-js/loader',
+          options: {
+            remarkPlugins: [],
+            rehypePlugins: [],
+          },
+        },
+      ],
+    })
+
     return config
   },
+  // Add MDX file support
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 }
 
-module.exports = nextConfig
+module.exports = withMDX(nextConfig)
 
