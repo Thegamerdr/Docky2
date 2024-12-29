@@ -4,10 +4,11 @@ const withMDX = require('@next/mdx')({
     remarkPlugins: [],
     rehypePlugins: [],
   },
-})
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
   // Enable internationalized routing
   i18n: {
     locales: ['en', 'es', 'fr', 'ar'],
@@ -37,27 +38,11 @@ const nextConfig = {
     config.module.rules.push({
       test: /\.(woff|woff2|eot|ttf|otf)$/i,
       type: 'asset/resource',
-    })
+    });
 
-    // Add MDX loader
-    config.module.rules.push({
-      test: /\.mdx?$/,
-      use: [
-        {
-          loader: '@mdx-js/loader',
-          options: {
-            remarkPlugins: [],
-            rehypePlugins: [],
-          },
-        },
-      ],
-    })
-
-    return config
+    return config;
   },
-  // Add MDX file support
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
-}
+};
 
-module.exports = withMDX(nextConfig)
+module.exports = withMDX(nextConfig);
 

@@ -1,6 +1,8 @@
+'use client'
+
 import { useSearchParams } from 'next/navigation'
 
-function DashboardContent() {
+export function DashboardContent() {
   const searchParams = useSearchParams()
   // Use searchParams as needed in your component logic
   console.log(searchParams) //Example usage: log the search parameters
@@ -10,8 +12,6 @@ function DashboardContent() {
       <h1>Dashboard</h1>
       {/* rest of your DashboardContent component */}
     </div>
-  );
+  )
 }
-
-export default DashboardContent;
 
