@@ -1,30 +1,16 @@
-import { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { Toaster } from '@/components/ui/toaster'
-import { ThemeProvider } from '@/components/theme-provider'
 import { NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
-import { ErrorHandler } from '@/components/ErrorHandler'
-import { Analytics } from '@/components/Analytics'
-import { ResourceBlockerNotice } from '@/components/ResourceBlockerNotice'
-import '@/styles/globals.css'
+import { Inter } from 'next/font/google'
+import { IntlSupportWarning } from '@/components/IntlSupportWarning'
+import { IntlPolyfills } from '@/components/IntlPolyfills' // Added import
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: {
-    default: 'PerfumeVS - Compare and Discover Fragrances',
-    template: '%s | PerfumeVS'
-  },
-  description: 'Compare perfumes side by side, discover new fragrances, and find your perfect scent with PerfumeVS.',
-  // ... (rest of the metadata remains the same)
-}
-
 export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'es' }]
+  return [{ locale: 'en' }, { locale: 'es' }, { locale: 'fr' }]
 }
 
-export default async function RootLayout({
+export default async function LocaleLayout({
   children,
   params: { locale }
 }: {
@@ -38,22 +24,27 @@ export default async function RootLayout({
     notFound()
   }
 
+  const browserCheck = `
+    if (typeof window !== 'undefined') {
+      // Check if the browser supports Intl
+      if (!window.Intl || !window.Intl.DateTimeFormat) {
+        // If not, display a warning message
+        console.warn('Browser does not support Intl. Please update your browser.');
+      }
+    }
+  `;
+
+
   return (
-    <html lang={locale}>
-      <body className={inter.className}>
+    <html lang={locale} className={inter.className}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: browserCheck }} />
+      </head>
+      <body>
+        <IntlPolyfills />
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ErrorHandler error={null} />
-            <ResourceBlockerNotice />
-            {children}
-            <Toaster />
-            <Analytics />
-          </ThemeProvider>
+          <IntlSupportWarning />
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>

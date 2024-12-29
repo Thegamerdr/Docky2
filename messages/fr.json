@@ -1,0 +1,20 @@
+{
+  "perfume": {
+    "reviews": "avis",
+    "releasedOn": "Sorti en {date}",
+    "notes": "Notes",
+    "inStock": {
+      "one": "{count} article en stock",
+      "other": "{count} articles en stock"
+    },
+    "notes": {
+      "floral": "Floral",
+      "woody": "Boisé",
+      "citrus": "Agrumes",
+      "oriental": "Oriental",
+      "fresh": "Frais",
+      "spicy": "Épicé"
+    }
+  }
+}
+

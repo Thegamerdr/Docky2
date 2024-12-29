@@ -6,6 +6,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useToast } from '@/components/ui/use-toast'
+import { useSearchParams } from 'next/navigation'
 
 interface Perfume {
   id: string
@@ -19,6 +20,7 @@ interface Perfume {
 }
 
 export function WishlistContent() {
+  const searchParams = useSearchParams()
   const [wishlist, setWishlist] = useState<Perfume[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

@@ -1,34 +1,37 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ['your-image-domain.com'],
-  },
-  async headers() {
-    return [
+  // Enable internationalized routing
+  i18n: {
+    locales: ['en', 'es', 'fr', 'ar'],
+    defaultLocale: 'en',
+    domains: [
       {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
+        domain: 'example.com',
+        defaultLocale: 'en',
       },
-    ]
+      {
+        domain: 'example.es',
+        defaultLocale: 'es',
+      },
+      {
+        domain: 'example.fr',
+        defaultLocale: 'fr',
+      },
+      {
+        domain: 'example.ae',
+        defaultLocale: 'ar',
+      },
+    ],
+  },
+  // Modern handling of URL imports
+  webpack: (config, { isServer }) => {
+    // Replace url loader with asset modules
+    config.module.rules.push({
+      test: /\.(woff|woff2|eot|ttf|otf)$/i,
+      type: 'asset/resource',
+    })
+
+    return config
   },
 }
 

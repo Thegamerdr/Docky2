@@ -1,19 +1,28 @@
 {
-  "home": {
-    "title": "Find Your Perfect Scent Match",
-    "subtitle": "Compare perfumes and discover your signature fragrance",
-    "searchPlaceholder": "Search perfumes (e.g., 'Chanel No. 5' or 'floral scents')",
-    "compareButton": "Compare"
-  },
-  "navigation": {
-    "home": "Home",
-    "compare": "Compare"
-  },
-  "perfume": {
-    "notes": "Notes",
-    "longevity": "Longevity",
-    "sillage": "Sillage",
-    "userReviews": "User Reviews"
+  "demo": {
+    "title": "Internationalization Features",
+    "pluralization": {
+      "title": "Pluralization",
+      "items": {
+        "zero": "No items",
+        "one": "One item",
+        "other": "{count} items"
+      }
+    },
+    "dateTime": {
+      "title": "Date & Time Formatting"
+    },
+    "numbers": {
+      "title": "Number Formatting"
+    },
+    "lists": {
+      "title": "List Formatting"
+    },
+    "direction": {
+      "title": "Text Direction",
+      "start": "This text aligns to the start",
+      "end": "This text aligns to the end"
+    }
   }
 }
 

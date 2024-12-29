@@ -1,11 +1,11 @@
 import { Suspense } from 'react'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { WishlistContent } from '@/components/WishlistContent'
+import { NotFoundContent } from '@/components/NotFoundContent'
 
-export default function WishlistPage() {
+export default function NotFoundPage() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <WishlistContent />
+      <NotFoundContent />
     </Suspense>
   )
 }
