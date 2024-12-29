@@ -4,6 +4,10 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
   ],
   plugins: ['react', '@typescript-eslint'],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+  },
   rules: {
     // Avoid hardcoded labels in component markup
     'react/jsx-no-literals': ['error', {
