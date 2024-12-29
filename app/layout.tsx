@@ -1,23 +1,23 @@
-import {NextIntlClientProvider} from 'next-intl';
-import {useLocale} from 'next-intl';
-import {notFound} from 'next/navigation';
- 
-export default function RootLayout({children, params}) {
-  const locale = useLocale();
- 
-  // Show a 404 error if the user requests an unknown locale
-  if (params.locale !== locale) {
-    notFound();
-  }
- 
+import './globals.css'
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'Perfume Marketplace Analyzer',
+  description: 'Compare and analyze perfumes in the marketplace',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang={locale}>
-      <body>
-        <NextIntlClientProvider>
-          {children}
-        </NextIntlClientProvider>
-      </body>
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
     </html>
-  );
+  )
 }
 
