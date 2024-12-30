@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from "@/components/ui/button"
+import Button from '@/components/ui/button'
 import { Heart } from 'lucide-react'
 import { useToast } from "@/components/ui/use-toast"
 

@@ -2,9 +2,9 @@
 
 import { useRouter } from '@/utils/navigation'
 import { useTranslations } from 'next-intl'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import Button from '@/components/ui/button'
 import { Search } from 'lucide-react'
+import Input from '@/components/ui/input'
 
 export function LocalizedSearchForm() {
   const t = useTranslations('search')
@@ -27,7 +27,7 @@ export function LocalizedSearchForm() {
         aria-label={t('searchLabel')}
         required
       />
-      <Button type="submit">
+      <Button type="submit" onClick={() => {}}>
         <Search className="w-4 h-4 mr-2" aria-hidden="true" />
         {t('searchButton')}
       </Button>

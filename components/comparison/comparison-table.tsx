@@ -12,15 +12,21 @@ interface ComparisonTableProps {
   perfumes: Perfume[]
 }
 
+const NAME_HEADER = "Name";
+const BRAND_HEADER = "Brand";
+const PRICE_HEADER = "Price";
+const RATING_HEADER = "Rating";
+const CURRENCY_SYMBOL = "$";
+
 export function ComparisonTable({ perfumes }: ComparisonTableProps) {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Brand</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Rating</TableHead>
+          <TableHead>{NAME_HEADER}</TableHead>
+          <TableHead>{BRAND_HEADER}</TableHead>
+          <TableHead>{PRICE_HEADER}</TableHead>
+          <TableHead>{RATING_HEADER}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -28,7 +34,7 @@ export function ComparisonTable({ perfumes }: ComparisonTableProps) {
           <TableRow key={perfume.id}>
             <TableCell>{perfume.name}</TableCell>
             <TableCell>{perfume.brand}</TableCell>
-            <TableCell>${perfume.price.toFixed(2)}</TableCell>
+            <TableCell>{CURRENCY_SYMBOL}{perfume.price.toFixed(2)}</TableCell>
             <TableCell>{perfume.rating.toFixed(1)}</TableCell>
           </TableRow>
         ))}

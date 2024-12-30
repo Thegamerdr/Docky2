@@ -4,6 +4,13 @@ import Link from 'next/link';
 import { ChevronRight, ChevronLeft, Home, Settings, BarChart2 } from 'lucide-react';
 import { configureEventStream, testEventStream } from '../utils/risc';
 
+const TITLE = "RISC Configuration - Perfume Marketplace Analyzer";
+const DESCRIPTION = "RISC Configuration for Perfume Marketplace Analyzer";
+const DASHBOARD = "Dashboard";
+const HOME = "Home";
+const RISC_CONFIGURATION = "RISC Configuration";
+const INVENTORY = "Inventory";
+
 export default function RiscConfig() {
   const [configStatus, setConfigStatus] = useState<string>('');
   const [testStatus, setTestStatus] = useState<string>('');
@@ -15,8 +22,8 @@ export default function RiscConfig() {
     try {
       await configureEventStream();
       setConfigStatus('Event stream configured successfully');
-    } catch (error) {
-      setConfigStatus(`Error configuring event stream: ${error.message}`);
+    } catch (error: unknown) {
+      setConfigStatus(`Error configuring event stream: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsLoading(false);
     }
@@ -28,7 +35,7 @@ export default function RiscConfig() {
       await testEventStream();
       setTestStatus('Event stream test successful');
     } catch (error) {
-      setTestStatus(`Error testing event stream: ${error.message}`);
+      setTestStatus(`Error testing event stream: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsLoading(false);
     }
@@ -37,8 +44,8 @@ export default function RiscConfig() {
   return (
     <div className="min-h-screen bg-gray-100 flex">
       <Head>
-        <title>RISC Configuration - Perfume Marketplace Analyzer</title>
-        <meta name="description" content="RISC Configuration for Perfume Marketplace Analyzer" />
+        <title>{TITLE}</title>
+        <meta name="description" content={DESCRIPTION} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -51,25 +58,25 @@ export default function RiscConfig() {
         onMouseLeave={() => setIsSidebarOpen(false)}
       >
         <div className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Dashboard</h2>
+          <h2 className="text-2xl font-semibold mb-6">{DASHBOARD}</h2>
           <nav>
             <ul className="space-y-2">
               <li>
                 <Link href="/dashboard" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
                   <Home className="mr-2" size={20} />
-                  Home
+                  {HOME}
                 </Link>
               </li>
               <li>
                 <Link href="/risc-config" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
                   <Settings className="mr-2" size={20} />
-                  RISC Configuration
+                  {RISC_CONFIGURATION}
                 </Link>
               </li>
               <li>
                 <Link href="/inventory" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
                   <BarChart2 className="mr-2" size={20} />
-                  Inventory
+                  {INVENTORY}
                 </Link>
               </li>
             </ul>
@@ -89,7 +96,7 @@ export default function RiscConfig() {
 
       {/* Main content */}
       <main className={`flex-1 p-8 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <h1 className="text-3xl font-bold mb-8">RISC Configuration</h1>
+        <h1 className="text-3xl font-bold mb-8">{RISC_CONFIGURATION}</h1>
         
         <div className="bg-white shadow-lg rounded-lg p-6">
           <div className="space-y-4">

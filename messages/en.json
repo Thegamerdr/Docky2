@@ -10,6 +10,10 @@
     "searchPlaceholder": "Search perfumes...",
     "searchLabel": "Search for perfumes",
     "searchButton": "Search"
+  },
+  "intlSupport": {
+    "browserCompatibilityWarning": "Browser Compatibility Warning",
+    "browserSupportMessage": "Your browser may not fully support all internationalization features. Some content might not display correctly. Please consider updating your browser."
   }
 }
 
